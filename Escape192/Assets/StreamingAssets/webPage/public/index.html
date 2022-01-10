@@ -10,6 +10,7 @@
     <!-- defined -->
     <script src="my_block/my_block.js"></script>
     <script src="my_block/my_logic.js"></script>
+    <script src="control.js"></script>
 
     <style>
       body {
@@ -37,57 +38,15 @@
     </p>
     <p style="padding-left: 90px">
       <button
-        onclick="displayAll()"
+        onclick="display()"
         style="background-color: E0E0E0; padding: 15px 32px"
       >
-        RUN2
+        RUN3
       </button>
     </p>
+
     <div id="blocklyDiv" style="height: 900px; width: 1080px"></div>
-
-    <xml id="toolboxAll" style="display: none">
-      <category name="Movement">
-        <block type="moving_unit"></block>
-        <block type="turn"></block>
-        <block type="jump"></block>
-      </category>
-      <category name="Logic">
-        <block type="math_number">
-          <field name="NUM">1</field>
-        </block>
-        <block type="repeat"></block>
-      </category>
-      <category name="Variable">
-        <button text="create variable" callbackKey="createVariable"></button>
-        <!-- <button text="get variable" callbackKey="getVar"></button> -->
-        <block type="variables_get"></block>
-        <block type="variables_set"></block>
-        <!-- <block type="varGame"></block> -->
-      </category>
-    </xml>
-
-    <xml
-      xmlns="https://developers.google.com/blockly/xml"
-      id="toolbox1"
-      style="display: none"
-    >
-      <block type="moving_unit"></block>
-      <block type="math_number">
-        <field name="NUM">1</field>
-      </block>
-    </xml>
-
-    <xml
-      xmlns="https://developers.google.com/blockly/xml"
-      id="toolbox2"
-      style="display: none"
-    >
-      <block type="moving_unit"></block>
-      <block type="math_number">
-        <field name="NUM">1</field>
-      </block>
-      <block type="turn"></block>
-    </xml>
+    <xml id="toolbox" style="display: none"></xml>
 
     <xml
       xmlns="https://developers.google.com/blockly/xml"
@@ -102,206 +61,5 @@
       <block type="jump"></block>
     </xml>
 
-    <script>
-      // Custom requires for the playground.
-      let workspace = null;
-      var match = location.search.match(/dir=([^&]+)/);
-      var rtl = match && match[1] == "rtl";
-
-      // #todo: Implements the API for unity to request the scene
-
-      function display1(x) {
-        workspace = Blockly.inject("blocklyDiv", {
-          comments: true,
-          collapse: true,
-          disable: true,
-          grid: {
-            spacing: 25,
-            length: 3,
-            colour: "#ccc",
-            snap: true,
-          },
-          horizontalLayout: false,
-          maxBlocks: Infinity,
-          maxInstances: { test_basic_limit_instances: 3 },
-          maxTrashcanContents: 256,
-          // media: '../media/',
-          oneBasedIndex: true,
-          readOnly: false,
-          rtl: rtl,
-          move: {
-            scrollbars: true,
-            // scrollbars: false,
-            drag: true,
-            wheel: false,
-          },
-          toolbox: toolbox1,
-          toolboxPosition: "start",
-          renderer: "geras",
-          zoom: {
-            // controls: true,
-            // wheel: true,
-            startScale: 0.8,
-            // maxScale: 4,
-            // minScale: 0.25,
-            // scaleSpeed: 1.1
-          },
-        });
-
-        var xml = Blockly.Xml.textToDom(
-          '<xml><block type="start_block" x="20" y="20"></block></xml>'
-        );
-        xml.editable = false;
-        xml.deletable = false;
-        workspace.clear();
-        Blockly.Xml.domToWorkspace(xml, workspace);
-        return "Display 1 from JS";
-      }
-
-      function display2() {
-        workspace = Blockly.inject("blocklyDiv", {
-          comments: true,
-          collapse: true,
-          disable: true,
-          grid: {
-            spacing: 25,
-            length: 3,
-            colour: "#ccc",
-            snap: true,
-          },
-          horizontalLayout: false,
-          maxBlocks: Infinity,
-          maxInstances: { test_basic_limit_instances: 3 },
-          maxTrashcanContents: 256,
-          // media: '../media/',
-          oneBasedIndex: true,
-          readOnly: false,
-          rtl: rtl,
-          move: {
-            scrollbars: true,
-            // scrollbars: false,
-            drag: true,
-            wheel: false,
-          },
-          toolbox: toolbox2,
-          toolboxPosition: "start",
-          renderer: "geras",
-          zoom: {
-            // controls: true,
-            // wheel: true,
-            startScale: 0.8,
-            // maxScale: 4,
-            // minScale: 0.25,
-            // scaleSpeed: 1.1
-          },
-        });
-
-        var xml = Blockly.Xml.textToDom(
-          '<xml><block type="start_block" x="20" y="20"></block></xml>'
-        );
-        xml.editable = false;
-        xml.deletable = false;
-        workspace.clear();
-        Blockly.Xml.domToWorkspace(xml, workspace);
-      }
-
-      function display3() {
-        workspace = Blockly.inject("blocklyDiv", {
-          comments: true,
-          collapse: true,
-          disable: true,
-          grid: {
-            spacing: 25,
-            length: 3,
-            colour: "#ccc",
-            snap: true,
-          },
-          horizontalLayout: false,
-          maxBlocks: Infinity,
-          maxInstances: { test_basic_limit_instances: 3 },
-          maxTrashcanContents: 256,
-          // media: '../media/',
-          oneBasedIndex: true,
-          readOnly: false,
-          rtl: rtl,
-          move: {
-            scrollbars: true,
-            // scrollbars: false,
-            drag: true,
-            wheel: false,
-          },
-          toolbox: toolbox3,
-          toolboxPosition: "start",
-          renderer: "geras",
-          zoom: {
-            // controls: true,
-            // wheel: true,
-            startScale: 0.8,
-            // maxScale: 4,
-            // minScale: 0.25,
-            // scaleSpeed: 1.1
-          },
-        });
-
-        var xml = Blockly.Xml.textToDom(
-          '<xml><block type="start_block" x="20" y="20"></block></xml>'
-        );
-        xml.editable = false;
-        xml.deletable = false;
-        workspace.clear();
-        Blockly.Xml.domToWorkspace(xml, workspace);
-      }
-
-      function displayAll() {
-        workspace = Blockly.inject("blocklyDiv", {
-          comments: true,
-          collapse: true,
-          disable: true,
-          grid: {
-            spacing: 25,
-            length: 3,
-            colour: "#ccc",
-            snap: true,
-          },
-          horizontalLayout: false,
-          maxBlocks: Infinity,
-          maxInstances: { test_basic_limit_instances: 3 },
-          maxTrashcanContents: 256,
-          // media: '../media/',
-          oneBasedIndex: true,
-          readOnly: false,
-          rtl: rtl,
-          move: {
-            scrollbars: true,
-            // scrollbars: false,
-            drag: true,
-            wheel: false,
-          },
-          toolbox: toolboxAll,
-          toolboxPosition: "start",
-          renderer: "geras",
-          zoom: {
-            // controls: true,
-            // wheel: true,
-            startScale: 0.8,
-            // maxScale: 4,
-            // minScale: 0.25,
-            // scaleSpeed: 1.1
-          },
-        });
-
-        var xml = Blockly.Xml.textToDom(
-          '<xml><block type="start_block" x="20" y="20"></block></xml>'
-        );
-        xml.editable = false;
-        xml.deletable = false;
-        workspace.clear();
-        workspace.registerButtonCallback("createVariable", createVariables);
-        // workspace.registerButtonCallback('getVar', getVariables);
-        Blockly.Xml.domToWorkspace(xml, workspace);
-      }
-    </script>
-
-    <!-- <script src="control.js"></script> -->
   </body>
 </html>
