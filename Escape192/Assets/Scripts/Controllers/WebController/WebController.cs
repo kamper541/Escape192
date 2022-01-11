@@ -104,7 +104,6 @@ public class WebController : MonoBehaviour
                     Debug.Log("Clicked!");
                     JObject o = JObject.Parse(payload.data);
                     JEnumerable<JToken> jt = o["payload"].Children();
-
                     // foreach(JToken token in jt){
                     //     print(token);  
                     // }
