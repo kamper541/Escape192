@@ -3,18 +3,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
+using Newtonsoft.Json.Linq;
 
 public class MapRenderer : MonoBehaviour
 {
+    //TODO: Add when have player.
+    [SerializeField]
+    GameObject Player;
+
+    uint PlayerXPosition;
+    uint PlayerYPosition;
+    char PlayerFacing;
     string SceneName;
     uint width;
     uint height;
-
     uint layer;
 
 
     private void Start()
     {
+        // Test
+        PlayerFacing = 'F';
+        //
+
         SceneName = SceneManager.GetActiveScene().name;
         // TextAsset asset = (Resources.Load(SceneName)) as TextAsset;
         TextAsset asset = (Resources.Load("Scene/test")) as TextAsset;
@@ -35,21 +46,19 @@ public class MapRenderer : MonoBehaviour
             for (int j = 0 ; j < height ; j ++){
                 List<char> Column = new List<char>();
                 for (int k = 0 ; k < width ; k ++){
+                    if(Text[j][k] == 'P'){
+                        PlayerXPosition = (uint)k;
+                        PlayerYPosition = (uint)j;
+                    }
                     Column.Add(Text[j][k]);
                 }
+                Column.Reverse();
                 Row.Add(Column);
             }
+            Row.Reverse();
             Layers.Add(Row);
         }
 
-        print(Layers[0][1][3]);
-        // print((string)((ArrayList)Layers[0])[1]);
-
-        // string[] layers = MapInfo.Split("~"[0]);
-        // print(layers[0]);
-        // foreach (string layer in layers)
-        // {
-        //     print(layer);
-        // }
+        print(Layers[1][0][2]);
     }
 }

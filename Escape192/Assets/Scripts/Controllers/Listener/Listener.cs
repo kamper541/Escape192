@@ -109,7 +109,7 @@ public class Listener : MonoBehaviour
         yield return new WaitWhile(() => lastbox == false);
         // Invoke("call_dead",2.5f);
         print("Activated");
-        control.Set_Begin();
+        WebController.Set_Begin();
         Activated = false;
         print("stop reading");
     }
@@ -165,7 +165,7 @@ public class Listener : MonoBehaviour
 
     }
     void call_dead(){
-        Wait_Dead.dead_or_not = true;
+        // Wait_Dead.dead_or_not = true;
     }
 
     

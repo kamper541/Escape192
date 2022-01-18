@@ -79,9 +79,9 @@ public class PlayerMovement : MonoBehaviour
         void Update()
         {
         
-            if(this.transform.position.y < -5f){
-                Wait_Dead.dead_or_not = true;    
-            }
+            // if(this.transform.position.y < -5f){
+            //     Wait_Dead.dead_or_not = true;    
+            // }
 
         }
 
