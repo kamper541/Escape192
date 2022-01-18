@@ -1,16 +1,18 @@
 # Sign Notation
+// --> For Map
 0 - Forbidden Path
 1 - Approval Path
 2 - Next Layer (Require Jump)
 P - Player's Starting Point
 G - Goal
 
-# Need to know
-x-axis = z-axis in Unity
-y-axis = x-axis in Unity
+// --> For Decorations
+0 - None
+F - Fence
+R - Rock
 
 # Format
-- ** Prefabs Folder **
+- ** Prefabs Folder Name (e.g. Forest, Winter, etc.)**
 - m (height)
 - n (width)
 - l (Layer)

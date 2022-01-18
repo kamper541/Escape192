@@ -14,8 +14,8 @@ public class PlayerMovement : MonoBehaviour
     private bool canMove;
     private Vector3 dPos;
     private Camera mainCam;
-
     private static bool finish = true;
+    Animator animator;
 
     private float unit = 3f;
 
@@ -59,11 +59,12 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private void Start() {
-        this.transform.position = new Vector3(xPost , yPost ,zPost);
-        this.transform.rotation = new Quaternion(0 , yAxis , 0 ,0);
+        // this.transform.position = new Vector3(xPost , yPost ,zPost);
+        this.transform.rotation = Quaternion.Euler(0 , yAxis , 0);
         oldEulerAngles = this.transform.rotation.eulerAngles;
         zPost = this.transform.localPosition.z;
         angle = this.transform.rotation.y;
+        animator = GetComponent<Animator>();
         framePerU = 0;
     }
 
@@ -78,7 +79,7 @@ public class PlayerMovement : MonoBehaviour
     //Update is called once per frame
         void Update()
         {
-        
+            
             // if(this.transform.position.y < -5f){
             //     Wait_Dead.dead_or_not = true;    
             // }
@@ -95,7 +96,7 @@ public class PlayerMovement : MonoBehaviour
         // }
         // print("Movement");
         if(Listener.get_to_move() == true){
-            print("move");
+            // print("move");
             MovePlayer(Listener.get_steps());
         }
         else if(Listener.get_to_turn() == true){
@@ -105,19 +106,21 @@ public class PlayerMovement : MonoBehaviour
             }
         }
         else if(Listener.get_to_jump() == true){
-            print("jump");
+            // print("jump");
             Jump();
         }
     }
 
     public void MovePlayer(float ans){
-        Debug.Log("Moving Player" + ans);
+        // print("Moving Player" + ans);
         if(framePerU == 20 * ans){
             Listener.toggle_to_move();
-            print(Listener.get_to_move());
+            // print(Listener.get_to_move());
             zPost = this.transform.localPosition.z;
             framePerU = 0;
+            animator.SetBool("Walk", false);
         }else{
+            animator.SetBool("Walk", true);
             transform.Translate(Vector3.forward * Time.deltaTime * 5.0f);
             framePerU++;
         }

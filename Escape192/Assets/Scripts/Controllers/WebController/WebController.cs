@@ -18,11 +18,18 @@ public class WebController : MonoBehaviour
 
     static bool Begin = false;
     static private JEnumerable<JToken> Inside_Payload = new JEnumerable<JToken>();
+    static private JEnumerable<JToken> Variable_Map = new JEnumerable<JToken>();
+
+    public bool HasPayload = false;
 
     //-----Get, Set------
 
     public static JEnumerable<JToken> Get_JToken(){
         return Inside_Payload;
+    }
+
+    public static JEnumerable<JToken> Get_VariblesMap(){
+        return Variable_Map;
     }
 
     public static void Set_Begin(){
@@ -65,7 +72,7 @@ public class WebController : MonoBehaviour
             if(!is_display){
             is_display = true;
             string stg_name = SceneManager.GetActiveScene().name;
-            print("last " + stg_name[stg_name.Length - 1]);
+            // print("last " + stg_name[stg_name.Length - 1]);
             // if((stg_name[stg_name.Length - 1] == '1') || (stg_name[stg_name.Length - 1] == '2' )){
             //     try{
             //         webView.EvaluateJavaScript("display1();", (payload) => {
@@ -104,13 +111,25 @@ public class WebController : MonoBehaviour
                     Debug.Log("Clicked!");
                     JObject o = JObject.Parse(payload.data);
                     JEnumerable<JToken> jt = o["payload"].Children();
-                    // foreach(JToken token in jt){
-                    //     print(token);  
-                    // }
+                    // JEnumerable<JToken> map = jt["Map"].Children();
+                    // JEnumerable<JToken> pl = jt["code"].Children();
+                    JEnumerable<JToken> map = new JEnumerable<JToken>();
+                    JEnumerable<JToken> code = new JEnumerable<JToken>();
+                    
+                    
+                    foreach(JToken token in jt){
+                        if((string)token["name"] == "code"){
+                            code = token["code"].Children(); 
+                        }else if((string)token["name"] == "var_map"){
+                            map = token["map"].Children();
+                        }
+                    }
 
-                    Inside_Payload = jt;
+                    Inside_Payload = code;
+                    Variable_Map = map;
+                    // trigger here
                     Begin = true;
-                    print(Begin);
+                    // print(Begin);
                 }
                 catch(Exception e)
                 {

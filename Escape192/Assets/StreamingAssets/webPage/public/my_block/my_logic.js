@@ -138,7 +138,7 @@ function defined(){
     }else{
       ans = ans + `,{name:"last"}`
     }
-    ans = `{"code":[` + ans + `]}`
+    ans = `{name:"code", code:[` + ans + `]}`
     console.log(ans)
     ans = '{"payload":['+ getVariables() + ',' + ans +']}'
     console.log(ans);
@@ -155,7 +155,7 @@ function getVariables(){
     let variable_by_blockly = Blockly.Variables.getAddedVariables(workspace , [])
     let map_from_web = var_map
     let check_is_has = false
-    let map_to_unity = `{"Map":[`
+    let map_to_unity = `{name:"var_map", map:[`
     console.log(map_from_web);
     variable_by_blockly.forEach(element => {
         if(map_from_web.has(element.name)){
