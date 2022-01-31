@@ -4,6 +4,23 @@ using UnityEngine.SceneManagement;
 
 public class LevelLoader : MonoBehaviour
 {
+    public enum LevelType
+    {
+      TIMER,
+      MOVE,
+      
+    };
+
+    public LevelCompleted levelcomplete;
+
+    public int Score1Star;
+    public int Score2Star;
+    public int Score3Star;
+
+    protected LevelType type;
+
+    protected int CurrentScore;
+
     public bool openDoors = true;
     public GameObject FreezePanal;
 
@@ -13,13 +30,15 @@ public class LevelLoader : MonoBehaviour
 
     void Start()
     {
+      // LevelCompleted.SetScore(CurrentScore);
+      
       anim = this.GetComponent<Animation>();
 
       // When scene starts check if doors has to be opened and play door open animation.
       if(openDoors)
       {
         // anim.Play("OpenDoors");
-         FreezePanal.SetActive(true);
+        //  FreezePanal.SetActive(true);
 
       }
     }
