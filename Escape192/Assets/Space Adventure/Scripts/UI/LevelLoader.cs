@@ -4,25 +4,9 @@ using UnityEngine.SceneManagement;
 
 public class LevelLoader : MonoBehaviour
 {
-    public enum LevelType
-    {
-      TIMER,
-      MOVE,
-      
-    };
 
-    public LevelCompleted levelcomplete;
-
-    public int Score1Star;
-    public int Score2Star;
-    public int Score3Star;
-
-    protected LevelType type;
-
-    protected int CurrentScore;
 
     public bool openDoors = true;
-    public GameObject FreezePanal;
 
     public LoadBar loadBar;
 
@@ -38,7 +22,6 @@ public class LevelLoader : MonoBehaviour
       if(openDoors)
       {
         // anim.Play("OpenDoors");
-        //  FreezePanal.SetActive(true);
 
       }
     }
