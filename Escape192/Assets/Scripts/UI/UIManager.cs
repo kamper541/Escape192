@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -31,7 +32,7 @@ public class UIManager : MonoBehaviour
                 Destroy(gameObject);
             }
         }
-        DontDestroyOnLoad(gameObject);
+        // DontDestroyOnLoad(gameObject);
     }
 
 
@@ -82,5 +83,20 @@ public class UIManager : MonoBehaviour
         {
             Debug.Log("You cannot open this map now. Please work hard to collect more stars");
         }
+    }
+
+
+    public void BackButton()
+    {
+        mapSelectionPanel.gameObject.SetActive(true);
+        for(int i = 0; i < mapSelections.Length; i++)
+        {
+            levelSelectionPanels[i].gameObject.SetActive(false);
+        }
+    }
+
+    public void SceneTransition(string _sceneName)
+    {
+        SceneManager.LoadScene(_sceneName);
     }
 }
