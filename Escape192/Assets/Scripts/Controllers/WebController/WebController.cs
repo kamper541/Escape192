@@ -100,7 +100,7 @@ public class WebController : MonoBehaviour
                     TextAsset asset = (Resources.Load("WebRequest/StageRequest")) as TextAsset;
                     string text = asset.ToString();
                     string[] UnityRenderRequest = text.Split("\n"[0]);
-                    Debug.Log(UnityRenderRequest[1]);
+                    // Debug.Log(UnityRenderRequest[1]);
                     webView.EvaluateJavaScript($"display('move,number');", (payload) =>
                     {
                     });

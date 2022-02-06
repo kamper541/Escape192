@@ -21,16 +21,13 @@ public class MapRenderer : MonoBehaviour
     int PlayerXPosition;
     char PlayerFacing;
     string SceneName;
-    uint width;
-    uint height;
-    uint layer;
     string FolderName;
     bool Validating = false;
 
-    List<List<char>> MatrixOfMapToCheck = new List<List<char>>();
+    List<List<string>> MatrixOfMapToCheck = new List<List<string>>();
 
-    List<List<List<char>>> ModelLayers = new List<List<List<char>>>();
-    List<List<List<char>>> DesignLayers = new List<List<List<char>>>();
+    List<List<List<string>>> ModelLayers = new List<List<List<string>>>();
+    List<List<List<string>>> DesignLayers = new List<List<List<string>>>();
     JEnumerable<JToken> jt = new JEnumerable<JToken>();
 
 
@@ -42,56 +39,69 @@ public class MapRenderer : MonoBehaviour
 
         // Test
         PlayerFacing = 'F';
-        PlayerZPosition = 2;
-        PlayerXPosition = 0;
         //
 
         SceneName = SceneManager.GetActiveScene().name;
-        // TextAsset asset = (Resources.Load(SceneName)) as TextAsset;
-        TextAsset asset = (Resources.Load("Scene/test1")) as TextAsset;
-        TextAsset DesignAsset = (Resources.Load("Scene/dectest1")) as TextAsset;
+        // TextAsset asset = (Resources.Load("MapDesign/MapsModel/test1")) as TextAsset;
+        // TextAsset DesignAsset = (Resources.Load("MapDesign/MapsDecoration/dectest1")) as TextAsset;
 
+        TextAsset asset = (Resources.Load($"MapDesign/MapsModel/{SceneName}")) as TextAsset;
         string TextFile = asset.ToString();
-        string TextFileForDesign = DesignAsset.ToString();
-
         string[] Text = TextFile.Split("\n"[0]);
-        string[] TextDesign = TextFileForDesign.Split("\n"[0]);
+        uint width = uint.Parse(Text[0]);
+        uint height = uint.Parse(Text[1]);
+        uint layer = uint.Parse(Text[2]);
+        Text = Text.Skip(3).ToArray();
+        string MapInfo = string.Join("\n", Text);
+        Text = MapInfo.Split("\n"[0]);
+        CreateMapMatrix(layer, height, width, Text, ref ModelLayers);
 
+
+        TextAsset DesignAsset = (Resources.Load($"MapDesign/MapsDecoration/{SceneName}")) as TextAsset;
+        string TextFileForDesign = DesignAsset.ToString();
+        Text = TextFileForDesign.Split("\n"[0]);
         FolderName = Text[0];
         width = uint.Parse(Text[1]);
         height = uint.Parse(Text[2]);
         layer = uint.Parse(Text[3]);
-        // width * height
         Text = Text.Skip(4).ToArray();
-        string MapInfo = string.Join("\n", Text);
+        MapInfo = string.Join("\n", Text);
         Text = MapInfo.Split("\n"[0]);
-        // TODO: Deal With ArrayList!!!
-        for (int i = 0; i < layer; i++)
-        {
-            List<List<char>> Row = new List<List<char>>();
-            List<List<char>> DesignRow = new List<List<char>>();
-            for (int j = 0; j < height; j++)
-            {
-                List<char> Column = new List<char>();
-                List<char> DesignColumn = new List<char>();
-                for (int k = 0; k < width; k++)
-                {
-                    Column.Add(Text[j][k]);
-                    DesignColumn.Add(TextDesign[j][k]);
-                }
-                Column.Reverse();
-                DesignColumn.Reverse();
-                Row.Add(Column);
-                DesignRow.Add(DesignColumn);
-            }
-            Row.Reverse();
-            DesignRow.Reverse();
-            ModelLayers.Add(Row);
-            DesignLayers.Add(DesignRow);
-        }
+        CreateMapMatrix(layer, height, width, Text, ref DesignLayers);
+
         //TODO: change if there is more than one layer
         MatrixOfMapToCheck = ModelLayers[0];
-        Render();
+        Render(layer, height, width);
+    }
+
+    private void CreateMapMatrix(uint layer, uint height, uint width, string[] text, ref List<List<List<string>>> Layers)
+    {
+        int CurrentHeight = 0;
+        for (int i = 0; i < layer; i++)
+        {
+            List<List<string>> Row = new List<List<string>>();
+            for (int j = 0; j < height; j++)
+            {
+                List<string> Column = new List<string>();
+                if (text[CurrentHeight].Length == 1)
+                {
+                    Column.Add(text[CurrentHeight]);
+                }
+                else
+                {
+                    string[] InRowModel = text[CurrentHeight].Split(","[0]);
+                    for (int k = 0; k < width; k++)
+                    {
+                        Column.Add(InRowModel[k]);
+                    }
+                }
+                CurrentHeight++;
+                Column.Reverse();
+                Row.Add(Column);
+            }
+            Row.Reverse();
+            Layers.Add(Row);
+        }
     }
 
     private void Update()
@@ -103,54 +113,35 @@ public class MapRenderer : MonoBehaviour
         }
     }
 
-    // void TaskOnClick()
-    // {
-    //     Debug.Log(PlayerXPosition + "," + PlayerZPosition);
-    //     StartCoroutine(Validate(jt));
-    // }
-
-    void Render()
+    void Render(uint layer, uint height, uint width)
     {
-        // Transform PreFab2 = Resources.Load($"MapDesign/Forest/{FolderName}/G2");
-        int LastPrefab = 1;
-
-        // First Layer
-        for (int i = 0; i < height; i++)
-        {
-            int TogglePrefab = 0;
-            for (int j = 0; j < width; j++)
-            {
-                if (j == 0)
-                {
-                    TogglePrefab = LastPrefab == 1 ? 0 : 1;
-                    LastPrefab = TogglePrefab;
-                }
-                else
-                {
-                    int temp = TogglePrefab;
-                    TogglePrefab = temp == 1 ? 0 : 1;
-                }
-                PreFab = (GameObject)Resources.Load($"MapDesign/{FolderName}/Ground{TogglePrefab.ToString()}");
-                Instantiate(PreFab, new Vector3(i * 2, 0, j * 2), Quaternion.identity);
-            }
-
-        }
-
-        // Second Layer
         for (int i = 0; i < layer; i++)
         {
             for (int j = 0; j < height; j++)
             {
                 for (int k = 0; k < width; k++)
                 {
-                    if((char)DesignLayers[i][j][k] == 'P'){
+                    if (DesignLayers[i][j][k] == "P")
+                    {
                         PreFab = (GameObject)Resources.Load($"PlayerSkin/{DesignLayers[i][j][k]}");
                         Instantiate(PreFab, new Vector3(j * 2, i + 1, k * 2), Quaternion.identity);
+                        PlayerZPosition = k;
+                        PlayerXPosition = j;
                     }
-                    else if ((char)DesignLayers[i][j][k] != '0')
+                    else if (DesignLayers[i][j][k] == "G")
                     {
-                        PreFab = (GameObject)Resources.Load($"MapDesign/{FolderName}/{DesignLayers[i][j][k]}");
-                        Instantiate(PreFab, new Vector3(j * 2, i + 1, k * 2), Quaternion.identity);
+                        PreFab = (GameObject)Resources.Load($"MapDesign/MapResources/{FolderName}/{DesignLayers[i][j][k]}");
+                        Instantiate(PreFab, new Vector3(j * 2, i + 1, k * 2), Quaternion.Euler (0f, 90f, 0f));
+                    }
+                    else if (DesignLayers[i][j][k] == "W")
+                    {
+                        PreFab = (GameObject)Resources.Load($"MapDesign/MapResources/{FolderName}/{DesignLayers[i][j][k]}");
+                        Instantiate(PreFab, new Vector3(j * 2, i + (float)1.1, k * 2), Quaternion.Euler (90f, 0f, 0f));
+                    }
+                    else if (DesignLayers[i][j][k] != "0")
+                    {
+                        PreFab = (GameObject)Resources.Load($"MapDesign/MapResources/{FolderName}/{DesignLayers[i][j][k]}");
+                        Instantiate(PreFab, new Vector3(j * 2, i + 1, k * 2), transform.rotation);
                     }
                 }
             }
@@ -164,7 +155,7 @@ public class MapRenderer : MonoBehaviour
         Debug.Log("Validating");
         CheckCode(jt);
         // Validating = false;
-        if ((char)MatrixOfMapToCheck[PlayerXPosition][PlayerZPosition] == 'G')
+        if (MatrixOfMapToCheck[PlayerXPosition][PlayerZPosition] == "G")
         {
             print("Win");
         }
@@ -225,7 +216,8 @@ public class MapRenderer : MonoBehaviour
                     CheckCode(InRepeat);
                 }
             }
-            else if ((char)MatrixOfMapToCheck[PlayerXPosition][PlayerZPosition] == '0')
+            //TODO: Detect fall
+            else if (MatrixOfMapToCheck[PlayerXPosition][PlayerZPosition] == "0")
             {
                 print("GameOver you step on 0");
             }
