@@ -10,14 +10,30 @@ const create_variable = '<button text="create variable" callbackKey="createVaria
 const get_variable = '<block type="variables_get"></block>'
 const set_variable = '<block type="variables_set"></block>'
 const variable_category = '<category name="Variable">' + create_variable + + get_variable + set_variable + '</category>'
+const if_statement = '<block type="if_state"></block>'
+const step_on = '<block type="step_on"></block>'
+const statement_category = '<category name="Statement">' + if_statement + step_on + "</category>"
 // Custom requires for the playground.
+const RenderTable = {
+  1: number + move,
+  2: number + move + turn,
+  3: repeat + number + move + turn,
+  4: movement_category + logic_category + variable_category + statement_category
+}
 let workspace = null;
 var match = location.search.match(/dir=([^&]+)/);
 var rtl = match && match[1] == "rtl";
 
-function display() {
+//TODO: Upgrade to and API (Unit just pass what to render on webview)
+function display(x) {
+  let param = JSON.stringify(x)
+  let request = param.split(",")
+  let ans = ""
+  for (let i = 0 ; i < request.length; i++){
+    ans += window[`${request[i]}`]
+  }
   let toolbox = document.getElementById("toolbox");
-  toolbox.insertAdjacentHTML('afterbegin',movement_category + logic_category + variable_category);
+  toolbox.insertAdjacentHTML('afterbegin',RenderTable[4]);
   workspace = Blockly.inject("blocklyDiv", {
     comments: true,
     collapse: true,
@@ -66,28 +82,28 @@ function display() {
   Blockly.Xml.domToWorkspace(xml, workspace);
 }
 
-function defined() {
-  Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
-  var code = Blockly.JavaScript.workspaceToCode(workspace);
-  // var what = code.split('\n'); //<---------- problem with "if"
-  let x = String(code);
-  // let y = x.substring(0 , x.length - 1)
-  // console.log(x[0]);
-  let ans = [];
-  let check = false;
-  for (i = 0; i < x.length; i++) {
-    if (x[i] == "@" && check == false) {
-      check = true;
-    } else if (x[i] != "@" && check == true) {
-      ans.push(x[i]);
-    } else if (x[i] == "@" && check == true) {
-      check = false;
-    }
-  }
-  ans.pop();
-  ans = ans.join("");
-  ans = `{"payload":[` + ans + `]}`;
-  console.log(ans);
-  location.href = `code://${ans}?key=1&anotherKey=2`;
-  return `${ans}`;
-}
+// function defined() {
+//   Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+//   var code = Blockly.JavaScript.workspaceToCode(workspace);
+//   // var what = code.split('\n'); //<---------- problem with "if"
+//   let x = String(code);
+//   // let y = x.substring(0 , x.length - 1)
+//   // console.log(x[0]);
+//   let ans = [];
+//   let check = false;
+//   for (i = 0; i < x.length; i++) {
+//     if (x[i] == "@" && check == false) {
+//       check = true;
+//     } else if (x[i] != "@" && check == true) {
+//       ans.push(x[i]);
+//     } else if (x[i] == "@" && check == true) {
+//       check = false;
+//     }
+//   }
+//   ans.pop();
+//   ans = ans.join("");
+//   ans = `{"payload":[` + ans + `]}`;
+//   console.log(ans);
+//   location.href = `code://${ans}?key=1&anotherKey=2`;
+//   return `${ans}`;
+// }

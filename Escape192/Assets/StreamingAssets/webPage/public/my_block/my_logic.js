@@ -112,6 +112,21 @@ Blockly.JavaScript['variables_get'] = function(block) {
     return myvar
 }
 
+Blockly.JavaScript['if_statement'] = function(block) {
+    var value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
+    var statements_name = Blockly.JavaScript.statementToCode(block, 'NAME');
+    // TODO: Assemble JavaScript into code variable.
+    var code = `{name:"if", condition:'${value_name}', do:'[${statements_name}]'}`;
+    return code;
+  };
+
+  Blockly.JavaScript['step_on'] = function(block) {
+    var dropdown_name = block.getFieldValue('NAME');
+    // var code = `name:"step_on", value:${dropdown_name}`;
+    //TODO: Fix This
+    return "";
+  };
+
 function defined(){
     Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
     var code = Blockly.JavaScript.workspaceToCode(workspace);
@@ -139,6 +154,7 @@ function defined(){
       ans = ans + `,{name:"last"}`
     }
     ans = `{name:"code", code:[` + ans + `]}`
+    // ans = `{name:"code", code:[` + '{"name":"move","value":2},{"name":"turn","value":"left"},{"name":"move","value":2},{name:"last"}' + `]}`
     console.log(ans)
     ans = '{"payload":['+ getVariables() + ',' + ans +']}'
     console.log(ans);
@@ -170,3 +186,4 @@ function getVariables(){
     map_to_unity += ']}'
     return map_to_unity
 }
+

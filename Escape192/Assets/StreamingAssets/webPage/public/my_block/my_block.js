@@ -39,10 +39,10 @@ Blockly.Blocks['if_state'] = {
         this.appendValueInput("expression")
             .setCheck(null)
             .appendField("if");
-        this.appendDummyInput();
         this.appendStatementInput("do")
             .setCheck("Array")
-        this.setColour(230);
+            .appendField("Do");
+        this.setColour(270);
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
         this.setTooltip("");
@@ -147,4 +147,35 @@ Blockly.Blocks['jump'] = {
     }
   };
 
+  //If Statement Block
+  Blockly.Blocks['if_statement'] = {
+    init: function() {
+      this.appendValueInput("NAME")
+          .setCheck(null)
+          .appendField("If");
+      this.appendStatementInput("NAME")
+          .setCheck(null)
+          .appendField("Do");
+      this.setPreviousStatement(true, null);
+      this.setNextStatement(true, null);
+      this.setColour(270);
+   this.setTooltip("");
+   this.setHelpUrl("");
+    }
+  };
+
+  // Step event
+  Blockly.Blocks['step_on'] = {
+    init: function() {
+      this.appendDummyInput()
+          .appendField("Is Player Step On")
+          .appendField(new Blockly.FieldDropdown([["Blue","B"], ["Red","R"], ["Yellow","Y"], ["Gray","G"]]), "NAME");
+      this.setOutput(true, null);
+      this.setColour(270);
+   this.setTooltip("");
+   this.setHelpUrl("");
+    }
+  };
+
+  
 

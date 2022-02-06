@@ -19,6 +19,11 @@ public class UniWebViewInterface {
         plugin.CallStatic("setLogLevel", level); 
     }
 
+    public static bool IsWebViewSupported() {
+        CheckPlatform();
+        return plugin.CallStatic<bool>("isWebViewSupported");
+    }
+
     public static void Init(string name, int x, int y, int width, int height) {
         CheckPlatform();
         plugin.CallStatic("init", name, x, y, width, height);

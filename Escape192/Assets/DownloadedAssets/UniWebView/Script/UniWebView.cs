@@ -230,7 +230,6 @@ public class UniWebView: MonoBehaviour {
 
     [SerializeField]
     private bool useToolbar;
-
         
     [SerializeField]
     private UniWebViewToolbarPosition toolbarPosition;
@@ -410,6 +409,38 @@ public class UniWebView: MonoBehaviour {
     void OnDisable() {
         if (started) {
             _Hide(useAsync: true);
+        }
+    }
+
+    /// <summary>
+    /// Whether the web view is supported in current runtime or not.
+    /// 
+    /// On some certain Android customized builds, the manufacturer prefers not containing the web view package in the 
+    /// system or blocks the web view package from being installed. If this happens, using of any web view related APIs will
+    /// throw a `MissingWebViewPackageException` exception.
+    /// 
+    /// Use this method to check whether the web view is available on the current running system. If this parameter returns `false`, 
+    /// you should not use the web view.
+    /// 
+    /// This property always returns `true` on other supported platforms, such as iOS or macOS editor. It only performs 
+    /// runtime checking on Android. On other not supported platforms such as Windows or Linux, it always returns `false`.
+    /// </summary>
+    /// <value>Returns `true` if web view is supported on the current platform. Otherwise, `false`.</value>
+    public static bool IsWebViewSupported {
+        get {
+            #if UNITY_EDITOR_OSX
+            return true;
+            #elif UNITY_EDITOR
+            return false;
+            #elif UNITY_IOS
+            return true;
+            #elif UNITY_STANDALONE_OSX
+            return true;
+            #elif UNITY_ANDROID
+            return UniWebViewInterface.IsWebViewSupported();
+            #else
+            return false; 
+            #endif
         }
     }
 
