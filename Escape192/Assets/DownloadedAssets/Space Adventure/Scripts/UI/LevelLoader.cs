@@ -4,8 +4,9 @@ using UnityEngine.SceneManagement;
 
 public class LevelLoader : MonoBehaviour
 {
+
+
     public bool openDoors = true;
-    public GameObject FreezePanal;
 
     public LoadBar loadBar;
 
@@ -13,13 +14,14 @@ public class LevelLoader : MonoBehaviour
 
     void Start()
     {
+      // LevelCompleted.SetScore(CurrentScore);
+      
       anim = this.GetComponent<Animation>();
 
       // When scene starts check if doors has to be opened and play door open animation.
       if(openDoors)
       {
         // anim.Play("OpenDoors");
-         FreezePanal.SetActive(true);
 
       }
     }
