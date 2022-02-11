@@ -3481,6 +3481,7 @@ MonoBehaviour:
   RightStarGo: {fileID: 852059529}
   Score: 0
   ScoreText: {fileID: 952298845}
+  header: {fileID: 1823685596}
 --- !u!111 &1237980498
 Animation:
   m_ObjectHideFlags: 0
