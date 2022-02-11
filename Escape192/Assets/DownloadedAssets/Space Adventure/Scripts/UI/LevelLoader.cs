@@ -4,8 +4,6 @@ using UnityEngine.SceneManagement;
 
 public class LevelLoader : MonoBehaviour
 {
-
-
     public bool openDoors = true;
 
     public LoadBar loadBar;
@@ -14,15 +12,12 @@ public class LevelLoader : MonoBehaviour
 
     void Start()
     {
-      // LevelCompleted.SetScore(CurrentScore);
-      
       anim = this.GetComponent<Animation>();
 
       // When scene starts check if doors has to be opened and play door open animation.
       if(openDoors)
       {
-        // anim.Play("OpenDoors");
-
+        anim.Play("OpenDoors");
       }
     }
 
@@ -42,7 +37,6 @@ public class LevelLoader : MonoBehaviour
 
       // Loading scene async and getting loading progress.
       AsyncOperation operation = SceneManager.LoadSceneAsync(sceneIndex);
-
 
       // While loading isn't done.
       while(!operation.isDone)
