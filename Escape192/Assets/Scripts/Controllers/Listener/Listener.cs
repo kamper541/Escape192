@@ -1,11 +1,20 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 using Newtonsoft.Json.Linq;
+using UnityEngine.UI;
 
 public class Listener : MonoBehaviour
 {
+    AnimationController anim;
+    UIScoringManager ScoreMananger;
+
+    double Score;
+
+    double max_score;
+    double multiplier;
     JObject o = new JObject();
 
     private bool Activated = false;
@@ -27,6 +36,21 @@ public class Listener : MonoBehaviour
     private static float steps;
 
     private static float degree;
+
+    // if 0 = dead, 1 = win
+    private static bool Status;
+
+    public static bool GetStatus(){
+        return Status;
+    }
+
+    public static void Win(){
+        Status = true;
+    }
+
+    public static void lose(){
+        Status = false;
+    }
 
     public static int get_num_block(){
         return num_block;
@@ -70,7 +94,18 @@ public class Listener : MonoBehaviour
     void Start()
     {
         // print("Listening..");
+        TextAsset asset = (Resources.Load($"score")) as TextAsset;
+        string SceneName = SceneManager.GetActiveScene().name;
+        string TextFile = asset.ToString();
+        string[] Text = TextFile.Split("\n"[0]);
+        Debug.Log(Text[1]);
+        max_score = int.Parse(Text[1]);
         num_block = 0;
+        GameObject go = GameObject.Find("LevelPanel");
+        anim = (AnimationController)go.GetComponent(typeof(AnimationController));
+        ScoreMananger = (UIScoringManager)go.GetComponent(typeof(UIScoringManager));
+        Score = 0;
+        multiplier = 1;
     }
 
     // Update is called once per frame
@@ -94,12 +129,29 @@ public class Listener : MonoBehaviour
                 {
                     print(e);
                 }
+                if(Status){
+                    ScoreMananger.SetHeader("Complete");
+                    anim.OpenWindow();
+                    double SendScore = CalculateScore();
+                    ScoreMananger.SetScore(SendScore);
+                }else{
+                    ScoreMananger.SetHeader("GameOver");
+                    anim.OpenWindow();
+                    ScoreMananger.SetScore(0);
+                }
             }
         }
         else
         {
 
         }
+    }
+
+    public double CalculateScore(){
+        if(Score <= max_score){
+            Score = 100;
+        }
+        return Score;
     }
 
 
@@ -115,13 +167,11 @@ public class Listener : MonoBehaviour
     }
 
     public IEnumerator Unpacking(JEnumerable<JToken> jt_get){
-        // print("unpacking");
         foreach(JToken token in jt_get ){
-            // print((string)token["name"]);
             if((string)token["name"] == "move"){
                 float val = (float)token["value"];
                 steps = val;
-                num_block ++;
+                Score += 1*(multiplier);
                 to_move = true;
                 yield return new WaitWhile(() => to_move == true);
                 steps = 0;
@@ -137,6 +187,7 @@ public class Listener : MonoBehaviour
                     degree = (float)90.0;
                 }
                 to_turn = true;
+                Score += 1*(multiplier);
                 yield return new WaitWhile(() => to_turn == true);
                 degree = 0;
             }
@@ -146,15 +197,18 @@ public class Listener : MonoBehaviour
                 steps = 1;
                 to_move = true;
                 yield return new WaitWhile(() => to_move == true);
+                Score += 1*(multiplier);
                 steps = 0;
             }
             else if((string)token["name"] == "repeat"){
                 JEnumerable<JToken> jt = token["do"].Children();
                 for(int i = 0 ; i < (int)(token["time"]) ; i++){
+                    multiplier = 0.25;
                     StartCoroutine(Unpacking(jt));
                     to_repeat = true;
                     yield return new WaitWhile(() => to_repeat == true);
                 }
+                multiplier = 1;
             }
             else if((string)token["name"] == "last"){
                 lastbox = true;
@@ -164,9 +218,4 @@ public class Listener : MonoBehaviour
         to_repeat = false;
 
     }
-    void call_dead(){
-        // Wait_Dead.dead_or_not = true;
-    }
-
-    
 }

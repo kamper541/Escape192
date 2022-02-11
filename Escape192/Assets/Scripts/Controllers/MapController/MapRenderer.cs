@@ -158,10 +158,12 @@ public class MapRenderer : MonoBehaviour
         if (MatrixOfMapToCheck[PlayerXPosition][PlayerZPosition] == "G")
         {
             print("Win");
+            Listener.Win();
         }
         else
         {
             print("GameOver you didn't reach the goal");
+            Listener.lose();
         }
     }
 
@@ -220,6 +222,7 @@ public class MapRenderer : MonoBehaviour
             else if (MatrixOfMapToCheck[PlayerXPosition][PlayerZPosition] == "0")
             {
                 print("GameOver you step on 0");
+                Listener.lose();
             }
         }
     }

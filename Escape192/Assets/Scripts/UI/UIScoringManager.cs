@@ -11,9 +11,20 @@ public class UIScoringManager : MonoBehaviour
     public GameObject MiddleStarGo;
     public GameObject RightStarGo;
 
+
     [Header("Our Score UI")]
-    public int Score;
+    public double Score;
     public Text ScoreText;
+    public Text header;
+    
+
+    public void SetScore(double score){
+        Score = score;
+    }
+
+    public void SetHeader(string status){
+        header.text = status;
+    }
 
 
     private void Update()
