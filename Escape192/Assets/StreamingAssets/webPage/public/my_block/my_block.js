@@ -4,7 +4,7 @@ Blockly.Blocks['moving_unit'] = {
     init: function () {
         this.appendValueInput("Block")
             .setCheck("Number")
-            .appendField("Moving");
+            .appendField("Move");
         this.appendDummyInput()
             .appendField("Block(s)");
         this.setInputsInline(true);
@@ -63,10 +63,10 @@ Blockly.Blocks['start_block'] = {
     }
   };
 
-Blockly.Blocks['jump'] = {
+Blockly.Blocks['Climb'] = {
     init: function() {
       this.appendDummyInput()
-          .appendField("Jump");
+          .appendField("Climb");
       this.setPreviousStatement(true, null);
       this.setNextStatement(true, null);
       this.setColour(230);
@@ -146,12 +146,25 @@ Blockly.Blocks['jump'] = {
       this.setColour(230);
     }
   };
-
-  //If Statement Block
-  Blockly.Blocks['if_statement'] = {
+  
+  // Block for variable setter.
+  Blockly.Blocks['variables_increase'] = {
     init: function() {
-      this.appendValueInput("NAME")
+      this.appendValueInput("increase")
           .setCheck(null)
+          .appendField("increase")
+          .appendField(new Blockly.FieldVariable("x"), "FIELD_NAME")
+      this.appendDummyInput()
+          .appendField("by 1")
+      this.setPreviousStatement(true, null);
+      this.setNextStatement(true, null);
+      this.setColour(230);
+    }
+  };
+  //If Statement Block
+  Blockly.Blocks['if_step'] = {
+    init: function() {
+      this.appendValueInput("if_val")
           .appendField("If");
       this.appendStatementInput("NAME")
           .setCheck(null)
@@ -169,7 +182,7 @@ Blockly.Blocks['jump'] = {
     init: function() {
       this.appendDummyInput()
           .appendField("Is Player Step On")
-          .appendField(new Blockly.FieldDropdown([["Blue","B"], ["Red","R"], ["Yellow","Y"], ["Gray","G"]]), "NAME");
+          .appendField(new Blockly.FieldDropdown([["Blue","B"], ["Red","R"], ["Yellow","Y"], ["Gray","G"]]), "Dropdown");
       this.setOutput(true, null);
       this.setColour(270);
    this.setTooltip("");

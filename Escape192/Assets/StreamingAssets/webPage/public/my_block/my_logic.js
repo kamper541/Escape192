@@ -1,3 +1,4 @@
+
 let var_map = new Map()
 var_map.set('x' , 0);
 //TODO: operational symetic
@@ -28,9 +29,9 @@ Blockly.JavaScript['turn'] = function(block) {
     return code;
 };
 
-Blockly.JavaScript['jump'] = function(block) {
+Blockly.JavaScript['Climb'] = function(block) {
     // TODO: Assemble JavaScript into code variable.
-    var code = `{"name":"jump"},`;
+    var code = `{"name":"climb"},`;
     return code;
 };
 
@@ -76,14 +77,16 @@ Blockly.JavaScript['turning_degree'] = function (block) {
 Blockly.JavaScript['moving_unit'] = function (block) {
     var value_block = Blockly.JavaScript.valueToCode(block, 'Block', Blockly.JavaScript.ORDER_ATOMIC);
     // TODO: Assemble JavaScript into code variable.
+    let test = `"${value_block}"`
+    console.log(test);
+    if(isNaN(test)){
+        value_block = `"${value_block}"`
+    }
     // var code = Blockly.JavaScript.workspaceToCode(workspace);
     if(value_block === ""){
         value_block = 0
     }
     let val = block.getFieldValue('Block')
-    let id = 'Block'
-    // return [id , value_block]
-    // return "Move(" + value_block + ")\n";
     
     return `{"name":"move","value":${value_block}},`
 };
@@ -93,12 +96,15 @@ Blockly.JavaScript['variables_set'] = function(block){
 
     var value = Blockly.JavaScript.valueToCode(block , 'set_to' , Blockly.JavaScript.ORDER_ATOMIC);
     var map_key = `${get_var[0]}`
+    if(value == ""){
+        value = 0
+    }
     // console.log(value);
     // console.log(Blockly.getVariable());
     // TODO: fix default not to 0
     var_map.set(map_key,(value==undefined)? 0:value)
     // TODO: return code
-    return ""
+    return `{name:"set_var_to",var:"${get_var}",value:${value}},`
 }
 
 Blockly.JavaScript['variables_get'] = function(block) {
@@ -112,20 +118,23 @@ Blockly.JavaScript['variables_get'] = function(block) {
     return myvar
 }
 
-Blockly.JavaScript['if_statement'] = function(block) {
-    var value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
+Blockly.JavaScript['step_on'] = function(block) {
+  var dropdown_name = block.getFieldValue('Dropdown');
+  // var code = `name:"step_on", value:${dropdown_name}`;
+  //TODO: Fix This
+  console.log(dropdown_name);
+  return [dropdown_name, Blockly.JavaScript.ORDER_NONE];
+};
+
+Blockly.JavaScript['if_step'] = function(block) {
+    var dropdown_var = Blockly.JavaScript.valueToCode(block, 'if_val',  Blockly.JavaScript.ORDER_NONE);
+    
     var statements_name = Blockly.JavaScript.statementToCode(block, 'NAME');
     // TODO: Assemble JavaScript into code variable.
-    var code = `{name:"if", condition:'${value_name}', do:'[${statements_name}]'}`;
+    var code = `{name:"if", condition:"${dropdown_var}", do:[${statements_name}]},`;
     return code;
   };
 
-  Blockly.JavaScript['step_on'] = function(block) {
-    var dropdown_name = block.getFieldValue('NAME');
-    // var code = `name:"step_on", value:${dropdown_name}`;
-    //TODO: Fix This
-    return "";
-  };
 
 function defined(){
     Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
@@ -155,8 +164,7 @@ function defined(){
     }
     ans = `{name:"code", code:[` + ans + `]}`
     // ans = `{name:"code", code:[` + '{"name":"move","value":2},{"name":"turn","value":"left"},{"name":"move","value":2},{name:"last"}' + `]}`
-    console.log(ans)
-    ans = '{"payload":['+ getVariables() + ',' + ans +']}'
+    ans = '{payload:['+ getVariables() + ',' + ans +']}'
     console.log(ans);
     location.href= `code://${ans}?key=1&anotherKey=2`
     return `${ans}`;
@@ -170,20 +178,21 @@ function createVariables(button){
 function getVariables(){
     let variable_by_blockly = Blockly.Variables.getAddedVariables(workspace , [])
     let map_from_web = var_map
-    let check_is_has = false
-    let map_to_unity = `{name:"var_map", map:[`
     console.log(map_from_web);
+    let ans = "";
     variable_by_blockly.forEach(element => {
-        if(map_from_web.has(element.name)){
-            check_is_has = true
-            let temp = map_from_web.get(element.name)
-            map_to_unity += `{variable:"${element.name}",value:${(((typeof temp)=='string')? `"${temp}"`:temp)}},`
-        }
+        // if(map_from_web.has(element.name)){
+            //     check_is_has = true
+            //     let temp = map_from_web.get(element.name)
+            //     map_to_unity += `{variable:"${element.name}",value:${(((typeof temp)=='string')? `"${temp}"`:temp)}},`
+            // }
+            ans = ans + `"${element.name}"` + ","
     });
-    if(check_is_has){
-        map_to_unity = map_to_unity.slice(0,-1)
-    }
-    map_to_unity += ']}'
+    ans = ans.slice(0,-1)
+    let map_to_unity = `{name:"var_map", map:[${ans}]}`
+    // if(check_is_has){
+    //     map_to_unity = map_to_unity.slice(0,-1)
+    // }
+    // map_to_unity += ']}'
     return map_to_unity
 }
-
